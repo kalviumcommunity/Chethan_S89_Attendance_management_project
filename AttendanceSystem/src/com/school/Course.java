@@ -18,11 +18,12 @@ public class Course {
         System.out.println("------------------------");
     }
 
-    // Getter methods
+    // Public getter for courseId
     public int getCourseId() {
         return this.courseId;
     }
 
+    // Public getter for courseName
     public String getCourseName() {
         return this.courseName;
     }

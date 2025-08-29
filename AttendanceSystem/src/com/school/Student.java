@@ -18,11 +18,12 @@ public class Student {
         System.out.println("------------------------");
     }
 
-    // Getter methods
+    // Public getter for studentId
     public int getStudentId() {
         return this.studentId;
     }
 
+    // Public getter for name
     public String getName() {
         return this.name;
     }
