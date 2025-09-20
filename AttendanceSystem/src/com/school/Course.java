@@ -1,6 +1,6 @@
 package com.school;
 
-public class Course {
+public class Course implements Storable {
     private static int nextCourseIdCounter = 101;
     private int courseId;
     private String courseName;
@@ -26,5 +26,10 @@ public class Course {
     // Public getter for courseName
     public String getCourseName() {
         return this.courseName;
+    }
+
+    @Override
+    public String toDataString() {
+        return courseId + "," + courseName;
     }
 }
