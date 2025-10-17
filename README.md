@@ -3,6 +3,14 @@
 
 
 
+## Part 8: Service Layer Implementation
+- Created `AttendanceService` class to manage attendance operations.
+- Implemented method overloading with multiple versions of `markAttendance()` and `displayAttendanceLog()`.
+- Added helper methods to find students and courses by ID.
+- Encapsulated attendance data management and file storage operations.
+- Updated `Main.java` to use the new service layer for attendance operations.
+- Demonstrated polymorphic behavior with different method signatures.
+
 ## Part 7: Object Relationships and Polymorphism
 - Modified `AttendanceRecord` to use `Student` and `Course` objects instead of IDs.
 - Added getters `getStudent()` and `getCourse()` to `AttendanceRecord`.

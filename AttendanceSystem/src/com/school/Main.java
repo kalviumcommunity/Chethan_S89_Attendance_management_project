@@ -38,25 +38,35 @@ public class Main {
         // Display school directory using polymorphism
         displaySchoolDirectory(schoolPeople);
         
-        // Create and populate attendance records with Student and Course objects
-        ArrayList<AttendanceRecord> records = new ArrayList<>();
-        records.add(new AttendanceRecord(students.get(0), courses.get(0), "Present"));
-        records.add(new AttendanceRecord(students.get(1), courses.get(1), "Absent"));
-        records.add(new AttendanceRecord(students.get(2), courses.get(2), "Late"));
-
         // Display course details
         System.out.println("\n--- Course Details ---");
         for (Course c : courses) c.displayDetails();
 
-        System.out.println("\n--- Attendance Records ---");
-        for (AttendanceRecord record : records) {
-            record.displayRecord();
-        }
-
-        // Save data to files
-        FileStorageService storage = new FileStorageService();
-        storage.saveData(students, "students.txt");
-        storage.saveData(courses, "courses.txt");
-        storage.saveData(records, "attendance_log.txt");
+        // Create FileStorageService and AttendanceService
+        FileStorageService storageService = new FileStorageService();
+        AttendanceService attendanceService = new AttendanceService(storageService);
+        
+        // Mark attendance using Student and Course objects directly
+        System.out.println("\n--- Marking Attendance (Using Objects) ---");
+        attendanceService.markAttendance(students.get(0), courses.get(0), "Present");
+        attendanceService.markAttendance(students.get(1), courses.get(1), "Absent");
+        
+        // Mark attendance using IDs
+        System.out.println("\n--- Marking Attendance (Using IDs) ---");
+        attendanceService.markAttendance(students.get(2).getId(), courses.get(2).getCourseId(), "Late", students, courses);
+        
+        // Display all attendance records
+        attendanceService.displayAttendanceLog();
+        
+        // Display attendance for a specific student
+        attendanceService.displayAttendanceLog(students.get(0));
+        
+        // Display attendance for a specific course
+        attendanceService.displayAttendanceLog(courses.get(1));
+        
+        // Save all data to files
+        storageService.saveData(students, "students.txt");
+        storageService.saveData(courses, "courses.txt");
+        attendanceService.saveAttendanceData();
     }
 }
