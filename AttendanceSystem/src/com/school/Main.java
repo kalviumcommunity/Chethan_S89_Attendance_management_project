@@ -1,48 +1,61 @@
 
 package com.school;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Create and populate students
-        ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student("Alice", "10th Grade"));
-        students.add(new Student("Bob", "11th Grade"));
-        students.add(new Student("Charlie", "12th Grade"));
+        // Initialize services
+        FileStorageService fileStorageService = new FileStorageService();
+        RegistrationService registrationService = new RegistrationService(fileStorageService);
+        AttendanceService attendanceService = new AttendanceService(registrationService, fileStorageService);
 
-        // Create and populate courses
-        ArrayList<Course> courses = new ArrayList<>();
-        courses.add(new Course("Mathematics"));
-        courses.add(new Course("Science"));
-        courses.add(new Course("History"));
+        // Register students
+        registrationService.registerStudent("Alice", "10th Grade");
+        registrationService.registerStudent("Bob", "11th Grade");
+        registrationService.registerStudent("Charlie", "12th Grade");
 
-        // Create and populate attendance records
-        ArrayList<AttendanceRecord> records = new ArrayList<>();
-        records.add(new AttendanceRecord(students.get(0).getId(), courses.get(0).getCourseId(), "Present"));
-        records.add(new AttendanceRecord(students.get(1).getId(), courses.get(1).getCourseId(), "Absent"));
-        records.add(new AttendanceRecord(students.get(2).getId(), courses.get(2).getCourseId(), "Late"));
+        // Register teachers and staff
+        registrationService.registerTeacher("Mrs. Smith", "Mathematics");
+        registrationService.registerStaff("Mr. John", "Librarian");
 
-        // Create Teacher and Staff
-        Teacher t1 = new Teacher("Mrs. Smith", "Mathematics");
-        Staff staff1 = new Staff("Mr. John", "Librarian");
+        // Create courses
+        registrationService.createCourse("Mathematics");
+        registrationService.createCourse("Science");
+        registrationService.createCourse("History");
 
-        // Display details
-        for (Student s : students) s.displayDetails();
-        t1.displayDetails();
-        staff1.displayDetails();
-        for (Course c : courses) c.displayDetails();
+        // Display school directory
+        displaySchoolDirectory(registrationService);
 
+        // Display courses
+        System.out.println("\n--- Courses ---");
+        for (Course course : registrationService.getCourses()) {
+            course.displayDetails();
+        }
+
+        // Mark attendance using IDs
+        List<Student> students = registrationService.getStudents();
+        List<Course> courses = registrationService.getCourses();
+        
+        attendanceService.markAttendance(students.get(0).getId(), courses.get(0).getCourseId(), "Present");
+        attendanceService.markAttendance(students.get(1).getId(), courses.get(1).getCourseId(), "Absent");
+        attendanceService.markAttendance(students.get(2).getId(), courses.get(2).getCourseId(), "Late");
+
+        // Display attendance records
         System.out.println("\n--- Attendance Records ---");
-        for (AttendanceRecord record : records) {
+        for (AttendanceRecord record : attendanceService.getAttendanceRecords()) {
             record.displayRecord();
         }
 
-        // Save data to files
-        FileStorageService storage = new FileStorageService();
-        storage.saveData(students, "students.txt");
-        storage.saveData(courses, "courses.txt");
-        storage.saveData(records, "attendance_log.txt");
+        // Save all data
+        registrationService.saveAllRegistrations();
+        attendanceService.saveAttendanceData();
+    }
+
+    private static void displaySchoolDirectory(RegistrationService regService) {
+        System.out.println("\n--- School Directory ---");
+        for (Person person : regService.getAllPeople()) {
+            person.displayDetails();
+        }
     }
 }
